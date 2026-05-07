@@ -1,0 +1,33 @@
+services:
+  # Backend API
+  - type: web
+    name: bpqg-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://bpqg-frontend.onrender.com
+      - key: ADMIN_EMAIL
+        value: admin@gmail.com
+      - key: ADMIN_PASSWORD
+        value: admin123
+
+  # Frontend Static Site
+  - type: static
+    name: bpqg-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://bpqg-backend.onrender.com/api  # update with your backend URL
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
